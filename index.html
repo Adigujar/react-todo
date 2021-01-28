@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script
+			crossorigin
+			src="https://unpkg.com/react@17/umd/react.development.js"
+		></script>
+		<script
+			crossorigin
+			src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+		></script>
+
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+		<title>Document</title>
+	</head>
+	<body>
+		<div id="root"></div>
+
+		<script type="text/babel">
+			const rootEl = document.getElementById("root");
+
+			const Counter = (props) => (
+				<div>
+					<h1>{props.count}</h1>
+                    <button onClick={props.increment}>Increment</button>
+                    <button onClick={props.decrement}>Decrement</button>
+                    <button onClick={props.deleteCounter}>Delete Counter</button>
+				</div>
+			);
+
+			const CounterApp = ({ counters, setCounters }) => {
+
+				const increment = (index) => {
+					setCounters(
+						counters.map((ele, idx) => (idx === index ? ele + 1 : ele)),
+					);
+                };
+                
+                const decrement = (index) => {
+					setCounters(
+						counters.map((ele, idx) => (idx === index ? ele - 1  : ele)),
+					);
+                };
+                
+                const deleteCounter = (index) =>{
+                setCounters(
+                    counters.filter((item,idx)=>idx!==index)
+                )
+            }
+
+				const addCounter = () => {
+					setCounters(counters.concat([0]));
+                };
+                
+
+
+				return (
+					<div>
+						{counters.map((element, index) => (
+							<Counter
+								key={index}
+								count={element}
+                                increment={() => increment(index)}
+                                decrement={()=> decrement(index)}
+                                deleteCounter={()=>deleteCounter(index)}
+                            />
+                            
+						))}
+
+						<button onClick={addCounter}>Add Another Counter</button>
+					</div>
+				);
+			};
+
+			const TodoApp = () => {
+				const [todos, setTodos] = React.useState(["Hey First Todo"]);
+
+				const [text, setText] = React.useState("dads");
+
+				const addTodo = () => {
+					setTodos(todos.concat([text]));
+				};
+
+				return (
+					<div>
+						<div>
+							<input
+								type='text'
+								value={text}
+								onChange={(event) => {
+									setText(event.target.value);
+								}}
+							/>
+							<button onClick={addTodo}>Add Todo</button>
+						</div>
+
+						{todos.map((value, index) => (
+							<div key={index}>
+								<h1>{value}</h1>
+							</div>
+						))}
+					</div>
+				);
+			};
+
+			const App = () => {
+				const [show, setShow] = React.useState("TODO");
+
+				const [counters, setCounters] = React.useState([]);
+
+				const change = () => {
+
+					setShow(show === "TODO" ? "COUNTER" : "TODO");
+				};
+				return (
+					<div>
+						<button onClick={change}>Change The App</button>
+						{show === "TODO" ? (
+							<TodoApp />
+						) : (
+							<CounterApp counters={counters} setCounters={setCounters} />
+						)}
+					</div>
+				);
+			};
+
+			ReactDOM.render(<App />, rootEl);
+		</script>
+	</body>
+</html>
